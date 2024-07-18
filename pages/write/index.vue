@@ -17,7 +17,7 @@ const onChange = (e: any) => {
   }
 };
 
-// 데이터 저장
+// 게시물 저장
 const submit = async (e: any) => {
   e.preventDefault();
 

@@ -19,7 +19,7 @@ const onChange = (e: any) => {
   }
 };
 
-// 데이터 가져오기
+// 특정 게시물 불러오기
 const getApiData = async () => {
   try {
     const result = await axios.get(`/api/node/posts/${paramsId}/edit`);
@@ -33,7 +33,7 @@ const getApiData = async () => {
   }
 };
 
-// 데이터 업데이트
+// 특정 게시물 업데이트
 const shoesUpdate = async (e: any) => {
   e.preventDefault();
 

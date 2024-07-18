@@ -6,7 +6,7 @@ import axios from "axios";
 const router = useRouter();
 const postsData = ref<any[] | undefined>();
 
-// 데이터 가져오기
+// 게시글 리스트 불러오기
 const getApiData = async () => {
   try {
     const result = await axios.get(`/api/node/posts`);
