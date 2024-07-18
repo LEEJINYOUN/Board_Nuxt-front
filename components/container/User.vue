@@ -7,6 +7,9 @@ const userName = ref("");
 const userNickname = ref("");
 const userPassword = ref("");
 
+const loginEmail = ref("");
+const loginPassword = ref("");
+
 // input 변경
 const onChange = (e: any) => {
   const { name, value } = e.target;
@@ -42,6 +45,34 @@ const submit = async (e: any) => {
       userNickname.value = "";
       userPassword.value = "";
     }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+// 로그인 input 변경
+const loginOnChange = (e: any) => {
+  const { name, value } = e.target;
+
+  if (name == "loginEmail") {
+    loginEmail.value = value;
+  } else if (name == "loginPassword") {
+    loginPassword.value = value;
+  }
+};
+
+// 로그인
+const loginSubmit = async (e: any) => {
+  e.preventDefault();
+
+  const value = {
+    email: loginEmail.value,
+    password: loginPassword.value,
+  };
+
+  try {
+    const result = await axios.post("/api/node/login", value);
+    console.log(result.data.message);
   } catch (e) {
     console.log(e);
   }
@@ -86,7 +117,29 @@ const submit = async (e: any) => {
         placeholder="비밀번호"
         class="border border-gray-600"
       />
-      <input type="submit" value="저장" class="cursor-pointer" />
+      <input type="submit" value="회원가입" class="cursor-pointer" />
+    </form>
+    <form method="post" @submit="loginSubmit">
+      <input
+        type="email"
+        id="loginEmail"
+        name="loginEmail"
+        v-model="loginEmail"
+        @input="(e) => loginOnChange(e)"
+        placeholder="이메일"
+        class="border border-gray-600"
+      />
+
+      <input
+        type="password"
+        id="loginPassword"
+        name="loginPassword"
+        v-model="loginPassword"
+        @input="(e) => loginOnChange(e)"
+        placeholder="비밀번호"
+        class="border border-gray-600"
+      />
+      <input type="submit" value="로그인" class="cursor-pointer" />
     </form>
   </LayoutFakeContainerLayout>
 </template>
