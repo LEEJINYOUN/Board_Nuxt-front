@@ -38,8 +38,8 @@ const submit = async (e: any) => {
 
   try {
     const result = await axios.post("/api/node/register", value);
+    console.log(result.data.message);
     if (result.status == 201) {
-      console.log(result.data.message);
       userEmail.value = "";
       userName.value = "";
       userNickname.value = "";
