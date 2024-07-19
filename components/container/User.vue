@@ -2,6 +2,7 @@
 import axios from "axios";
 import { LayoutFakeContainerLayout } from "#components";
 
+// 변수
 const userEmail = ref("");
 const userName = ref("");
 const userNickname = ref("");
@@ -9,6 +10,8 @@ const userPassword = ref("");
 
 const loginEmail = ref("");
 const loginPassword = ref("");
+
+const getUserData = ref<any | undefined>();
 
 // input 변경
 const onChange = (e: any) => {
@@ -72,11 +75,44 @@ const loginSubmit = async (e: any) => {
 
   try {
     const result = await axios.post("/api/node/login", value);
-    console.log(result.data.message);
+    if (result.status == 200) {
+      console.log(result.data.message);
+      window.open("/", "_self");
+    }
   } catch (e) {
     console.log(e);
   }
 };
+
+// 로그인 성공 시 유지
+const loginSuccess = async () => {
+  try {
+    const result = await axios.get("/api/node/login/success");
+    if (result.status == 200) {
+      getUserData.value = result.data;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+// 로그아웃
+const logout = async () => {
+  try {
+    const result = await axios.post("/api/node/logout");
+    if (result.status == 200) {
+      getUserData.value = undefined;
+      console.log(result.data.message);
+      window.open("/", "_self");
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+onMounted(() => {
+  loginSuccess();
+});
 </script>
 <template>
   <LayoutFakeContainerLayout>
@@ -141,5 +177,9 @@ const loginSubmit = async (e: any) => {
       />
       <input type="submit" value="로그인" class="cursor-pointer" />
     </form>
+    <h1 v-if="getUserData !== undefined">{{ getUserData.email }}</h1>
+    <div>
+      <button @click="logout">로그아웃</button>
+    </div>
   </LayoutFakeContainerLayout>
 </template>
