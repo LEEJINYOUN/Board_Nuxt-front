@@ -2,6 +2,9 @@
 import axios from "axios";
 import { LayoutFakeContainerLayout } from "#components";
 
+// storage
+const userStore = useUserStore();
+
 // 변수
 const userEmail = ref("");
 const userName = ref("");
@@ -11,7 +14,7 @@ const userPassword = ref("");
 const loginEmail = ref("");
 const loginPassword = ref("");
 
-const getUserData = ref<any | undefined>();
+const getTest = userStore.getUserData;
 
 // input 변경
 const onChange = (e: any) => {
@@ -68,51 +71,18 @@ const loginOnChange = (e: any) => {
 const loginSubmit = async (e: any) => {
   e.preventDefault();
 
-  const value = {
+  await userStore.login({
     email: loginEmail.value,
     password: loginPassword.value,
-  };
-
-  try {
-    const result = await axios.post("/api/node/login", value);
-    if (result.status == 200) {
-      console.log(result.data.message);
-      window.open("/", "_self");
-    }
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-// 로그인 성공 시 유지
-const loginSuccess = async () => {
-  try {
-    const result = await axios.get("/api/node/login/success");
-    if (result.status == 200) {
-      getUserData.value = result.data;
-    }
-  } catch (e) {
-    console.log(e);
-  }
+  });
 };
 
 // 로그아웃
 const logout = async () => {
-  try {
-    const result = await axios.post("/api/node/logout");
-    if (result.status == 200) {
-      getUserData.value = undefined;
-      console.log(result.data.message);
-      window.open("/", "_self");
-    }
-  } catch (e) {
-    console.log(e);
-  }
+  await userStore.logout();
 };
 
-onMounted(() => {
-  loginSuccess();
-});
+console.log(getTest);
 </script>
 <template>
   <LayoutFakeContainerLayout>
@@ -177,7 +147,7 @@ onMounted(() => {
       />
       <input type="submit" value="로그인" class="cursor-pointer" />
     </form>
-    <h1 v-if="getUserData !== undefined">{{ getUserData.email }}</h1>
+    <h1 v-if="getTest !== undefined">{{ getTest.email }}</h1>
     <div>
       <button @click="logout">로그아웃</button>
     </div>

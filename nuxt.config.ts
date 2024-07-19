@@ -18,4 +18,7 @@ export default defineNuxtConfig({
       proxy: { to: `${process.env.NUXT_PUBLIC_NODE_API_URL}/**` },
     },
   },
+  pinia: {
+    storesDirs: ["./stores/**"],
+  },
 });
