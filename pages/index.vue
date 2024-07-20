@@ -1,14 +1,14 @@
 <script setup lang="ts">
-definePageMeta({
-  layout: "navbar",
-});
-
+import axios from "axios";
 import {
   LazyContainerUser,
   LazyButtonBlueButton,
   LazyCommonPagination,
 } from "#components";
-import axios from "axios";
+
+definePageMeta({
+  layout: "navbar",
+});
 
 // 변수
 const router = useRouter();
@@ -41,7 +41,7 @@ onMounted(() => {
 <template>
   <div class="w-11/12 lg:w-2/3 m-auto mt-5">
     <div class="flex justify-end items-center w-full">
-      <LazyButtonBlueButton title="글쓰기" @click="goToWrite" />
+      <LazyButtonBlueButton type="button" title="글쓰기" @click="goToWrite" />
     </div>
     <div class="flex flex-col">
       <div class="overflow-x-auto sm:mx-0.5 lg:mx-0.5">

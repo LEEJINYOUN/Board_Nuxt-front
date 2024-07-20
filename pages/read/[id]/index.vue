@@ -1,5 +1,17 @@
 <script setup lang="ts">
 import axios from "axios";
+import {
+  LazyTextInputLabel,
+  LazyFormInputItem,
+  LazyFormTextareaItem,
+  LazyButtonBlueButton,
+  LazyButtonRedButton,
+  LazyButtonDarkButton,
+} from "#components";
+
+definePageMeta({
+  layout: "navbar",
+});
 
 // 변수
 const router = useRouter();
@@ -149,67 +161,104 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div>
-    <h1>글읽기 페이지</h1>
+  <div class="w-11/12 lg:w-2/3 m-auto mt-5">
     <div v-if="postsData !== undefined">
-      <div>번호 : {{ postsData.id }}</div>
-      <div>작성자 : {{ postsData.writer }}</div>
-      <div>제목 : {{ postsData.title }}</div>
-      <div>내용 : {{ postsData.content }}</div>
-      <div class="flex gap-4">
-        <button @click="gotoEdit">수정</button>
-        <button @click="() => postDelete(postsData.id)">삭제</button>
-        <button @click="goToBack">돌아가기</button>
+      <div class="grid gap-6 mb-6 md:grid-cols-2">
+        <div>
+          <LazyTextInputLabel is-for="title" title="제목" />
+          <LazyFormInputItem
+            type="text"
+            id="title"
+            :value="postsData.title"
+            :isReadonly="true"
+            :isDisabled="true"
+          />
+        </div>
+        <div>
+          <LazyTextInputLabel is-for="writer" title="작성자" />
+          <LazyFormInputItem
+            type="text"
+            id="writer"
+            :value="postsData.writer"
+            :isReadonly="true"
+            :isDisabled="true"
+          />
+        </div>
+      </div>
+      <div class="mb-6">
+        <LazyTextInputLabel is-for="content" title="내용" />
+        <LazyFormTextareaItem
+          id="content"
+          :value="postsData.content"
+          :isReadonly="true"
+          :isDisabled="true"
+        />
       </div>
     </div>
-    <div>
-      <h2>------댓글------</h2>
+    <div class="flex justify-end items-center my-5">
+      <LazyButtonBlueButton type="button" title="수정" @click="gotoEdit" />
+      <LazyButtonRedButton
+        type="button"
+        title="삭제"
+        @click="() => postDelete(postsData.id)"
+      />
+      <LazyButtonBlueButton type="button" title="목록" @click="goToBack" />
+    </div>
+    <div class="w-full md:w-4/6 m-auto">
       <form v-if="isCommentEdit == false" method="post" @submit="submit">
-        <input
-          type="text"
+        <LazyFormTextareaItem
           id="comment"
-          name="comment"
-          v-model="comment"
-          @input="(e) => onChange(e)"
-          placeholder="댓글 내용"
-          class="border border-gray-600"
+          :value="comment"
+          placeholder="댓글을 작성하세요."
         />
-        <input type="submit" value="저장" class="cursor-pointer" />
+        <div class="flex justify-end items-center my-5">
+          <LazyButtonDarkButton type="submit" title="댓글 작성" />
+        </div>
       </form>
       <form
         v-if="isCommentEdit == true"
         method="post"
         @submit="commentEditSubmit"
       >
-        <input
-          type="text"
-          id="comment"
-          name="comment"
-          v-model="comment"
-          @input="(e) => onChange(e)"
-          placeholder="댓글 내용"
-          class="border border-gray-600"
-        />
-        <input type="submit" value="수정하기" class="cursor-pointer" />
-      </form>
-      <div
-        v-for="(item, key) in commentsData"
-        :key="key"
-        class="flex items-center gap-4"
-      >
-        <div>댓글 번호 : {{ item.id }}</div>
-        <div>닉네임 : {{ item.writer_nickname }}</div>
-        <div>
-          <img
-            :src="item.writer_image"
-            :alt="item.writer_nickname"
-            class="w-10 h-10"
-          />
+        <LazyFormTextareaItem id="comment" :value="comment" />
+        <div class="flex justify-end items-center my-5">
+          <LazyButtonDarkButton type="submit" title="댓글 수정" />
         </div>
-        <div>내용 : {{ item.comment }}</div>
-        <div class="flex gap-4">
-          <button @click="() => commentEdit(item.id)">수정</button>
-          <button @click="() => commentDelete(item.id)">삭제</button>
+      </form>
+      <div class="flex flex-col gap-7">
+        <div
+          v-for="(item, key) in commentsData"
+          :key="key"
+          class="flex gap-5 px-3 py-4 bg-gray-200 rounded-lg"
+        >
+          <div class="flex justify-center items-center px-2">
+            <img
+              :src="item.writer_image"
+              :alt="item.writer_nickname"
+              class="w-12 h-12 rounded-full"
+            />
+          </div>
+          <div class="w-full flex flex-col">
+            <div class="flex justify-between p-2">
+              <div class="font-semibold">{{ item.writer_nickname }}</div>
+              <div class="text-gray-600 text-sm">{{ item.created_at }}</div>
+            </div>
+            <div class="p-2 w-full h-auto">
+              <div>{{ item.comment }}</div>
+            </div>
+            <div class="flex justify-end items-center">
+              <LazyButtonBlueButton
+                type="button"
+                title="수정"
+                @click="() => commentEdit(item.id)"
+              />
+              <LazyButtonRedButton
+                type="button"
+                title="삭제"
+                @click="() => commentDelete(item.id)"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
