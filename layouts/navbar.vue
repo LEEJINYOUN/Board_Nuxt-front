@@ -46,11 +46,12 @@ const mobileToggle = () => {
             :class="isMobileOpen == true ? 'flex' : 'hidden'"
             class="flex-col flex-grow pb-4 md:pb-0 md:flex md:justify-end md:flex-row"
           >
-            <button
+            <NuxtLink
+              to="/login"
               class="px-4 flex justify-start py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
             >
               로그인
-            </button>
+            </NuxtLink>
           </nav>
         </div>
       </div>

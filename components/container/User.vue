@@ -19,7 +19,6 @@ const getTest = userStore.getUserData;
 // input 변경
 const onChange = (e: any) => {
   const { name, value } = e.target;
-
   if (name == "email") {
     userEmail.value = value;
   } else if (name == "name") {
