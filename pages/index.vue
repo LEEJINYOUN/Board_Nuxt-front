@@ -3,7 +3,11 @@ definePageMeta({
   layout: "navbar",
 });
 
-import { LazyContainerUser } from "#components";
+import {
+  LazyContainerUser,
+  LazyButtonBlueButton,
+  LazyCommonPagination,
+} from "#components";
 import axios from "axios";
 
 // 변수
@@ -35,20 +39,72 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div>
-    <LazyContainerUser />
-    <button @click="goToWrite">글쓰기</button>
-    <div
-      v-for="(item, key) in postsData"
-      :key="key"
-      class="divide-y-2 divide-orange-500 flex gap-4"
-    >
-      <div>번호 : {{ item.id }}</div>
-      <div>작성자 : {{ item.writer }}</div>
-      <div class="cursor-pointer" @click="goToRead(item.id)">
-        제목 : {{ item.title }}
+  <div class="w-11/12 lg:w-2/3 m-auto mt-5">
+    <div class="flex justify-end items-center w-full">
+      <LazyButtonBlueButton title="글쓰기" @click="goToWrite" />
+    </div>
+    <div class="flex flex-col">
+      <div class="overflow-x-auto sm:mx-0.5 lg:mx-0.5">
+        <div class="py-2 inline-block min-w-full">
+          <div class="overflow-hidden">
+            <table class="min-w-full">
+              <thead class="bg-white border-b font-semibold text-md">
+                <tr>
+                  <th scope="col" class="text-gray-900 w-1/6 py-4 text-center">
+                    번호
+                  </th>
+                  <th scope="col" class="text-gray-900 w-3/6 py-4 text-center">
+                    제목
+                  </th>
+                  <th scope="col" class="text-gray-900 w-1/6 py-4 text-center">
+                    작성자
+                  </th>
+                  <th scope="col" class="text-gray-900 w-1/6 py-4 text-center">
+                    작성일
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(item, key) in postsData"
+                  :key="key"
+                  class="border-b hover:bg-gray-300/50 cursor-pointer"
+                  :class="key % 2 == 1 ? 'bg-white' : 'bg-gray-100'"
+                  @click="goToRead(item.id)"
+                >
+                  <td
+                    class="w-1/6 text-center py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+                  >
+                    {{ key + 1 }}
+                  </td>
+                  <td
+                    class="w-3/6 max-w-[250px] text-left text-sm text-gray-900 font-light px-6 py-4 text-ellipsis whitespace-nowrap overflow-hidden"
+                  >
+                    {{ item.title }}
+                  </td>
+                  <td
+                    class="w-1/6 text-center text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                  >
+                    {{ item.writer }}
+                  </td>
+                  <td
+                    class="w-1/6 text-center text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                  >
+                    {{ item.created_at }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <div>내용 : {{ item.content }}</div>
+    </div>
+    <div class="flex justify-center items-center">
+      <LazyCommonPagination />
     </div>
   </div>
+
+  <!-- <div>
+    <LazyContainerUser />
+  </div> -->
 </template>
