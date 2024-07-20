@@ -1,5 +1,15 @@
 <script setup lang="ts">
 import axios from "axios";
+import {
+  LazyTextInputLabel,
+  LazyFormInputItem,
+  LazyFormTextareaItem,
+  LazyButtonBlueButton,
+} from "#components";
+
+definePageMeta({
+  layout: "navbar",
+});
 
 // 변수
 const router = useRouter();
@@ -57,28 +67,26 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div>
-    <h1>수정 페이지</h1>
-    <form method="post" @submit="shoesUpdate">
-      <input
-        type="text"
-        id="title"
-        name="title"
-        v-model="title"
-        @input="(e) => onChange(e)"
-        placeholder="제목"
-        class="border border-gray-600"
-      />
-      <input
-        type="text"
-        id="content"
-        name="content"
-        v-model="content"
-        @input="(e) => onChange(e)"
-        placeholder="내용"
-        class="border border-gray-600"
-      />
-      <input type="submit" value="수정하기" class="cursor-pointer" />
+  <div class="w-11/12 lg:w-2/3 m-auto mt-5">
+    <form class="w-2/3 m-auto" method="post" @submit="shoesUpdate">
+      <div class="mb-5">
+        <LazyTextInputLabel is-for="title" title="제목" />
+        <LazyFormInputItem
+          type="text"
+          id="title"
+          :value="title"
+          placeholder="제목"
+        />
+      </div>
+      <div class="mb-5">
+        <LazyTextInputLabel is-for="content" title="내용" />
+        <LazyFormTextareaItem
+          id="content"
+          :value="content"
+          placeholder="내용"
+        />
+      </div>
+      <LazyButtonBlueButton type="submit" title="수정하기" />
     </form>
   </div>
 </template>

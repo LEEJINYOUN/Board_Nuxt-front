@@ -7,6 +7,7 @@ import {
   LazyButtonBlueButton,
   LazyButtonRedButton,
   LazyButtonDarkButton,
+  LazyCommonPagination,
 } from "#components";
 
 definePageMeta({
@@ -260,6 +261,9 @@ onMounted(() => {
             </div>
           </div>
         </div>
+      </div>
+      <div class="flex justify-center items-center my-7">
+        <LazyCommonPagination />
       </div>
     </div>
   </div>
