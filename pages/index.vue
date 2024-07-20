@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  layout: "navbar",
+});
+
 import { LazyContainerUser } from "#components";
 import axios from "axios";
 
