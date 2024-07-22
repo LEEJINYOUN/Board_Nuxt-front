@@ -197,7 +197,7 @@ onMounted(() => {
       <LazyButtonBlueButton
         v-if="
           userStore.getUserData !== undefined &&
-          userStore.getUserData.name === postsData.writer
+          userStore.getUserData.nickname === postsData.writer
         "
         type="button"
         title="수정"
@@ -206,7 +206,7 @@ onMounted(() => {
       <LazyButtonRedButton
         v-if="
           userStore.getUserData !== undefined &&
-          userStore.getUserData.name === postsData.writer
+          userStore.getUserData.nickname === postsData.writer
         "
         type="button"
         title="삭제"
