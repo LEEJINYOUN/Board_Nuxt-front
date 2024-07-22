@@ -10,11 +10,14 @@ export const useUserStore = defineStore("user", () => {
     try {
       const result = await axios.post("/api/node/login", value);
       if (result.status == 200) {
-        console.log(result.data.message);
-        // window.open("/", "_self");
+        alert(result.data.message);
+        window.location.replace("/");
+        await fetchLogin();
+      } else if (result.status == 202) {
+        alert(result.data.message);
       }
-      await fetchLogin();
     } catch (e) {
+      alert("회원이 아닙니다. 회원가입을 진행하세요.");
       console.log(e);
     }
   };
