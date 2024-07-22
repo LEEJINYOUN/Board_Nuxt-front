@@ -11,9 +11,6 @@ const props = defineProps<{
   accountToggle: () => void;
 }>();
 
-// storage
-const userStore = useUserStore();
-
 // 변수
 const email = ref("");
 const name = ref("");
@@ -26,7 +23,7 @@ const messages = ref({
   passwordMessage: "",
 });
 
-// 유효성 체크
+// 정규식 규칙
 const regexCheck = (type: string, input: string) => {
   let reg: any;
 
@@ -45,56 +42,70 @@ const regexCheck = (type: string, input: string) => {
   }
 };
 
-// 회원가입
-const submit = async (e: any) => {
-  e.preventDefault();
+// 정규식 판단
+const valueCheck = () => {
+  let emailCheck = regexCheck("email", email.value);
+  let nameCheck = regexCheck("name", name.value);
+  let nicknameCheck = regexCheck("nickname", nickname.value);
+  let passwordCheck = password.value.length < 8 || password.value.length > 20;
 
-  const value = {
-    email: email.value,
-    name: name.value,
-    nickname: nickname.value,
-    password: password.value,
-  };
-
-  if (!regexCheck("email", value.email)) {
+  if (!emailCheck) {
     messages.value.emailMessage = "이메일 형식이 아닙니다. 다시 입력하세요.";
   } else {
     messages.value.emailMessage = "";
   }
 
-  if (!regexCheck("name", value.name)) {
+  if (!nameCheck) {
     messages.value.nameMessage = "한글과 영어만 입력하세요.";
   } else {
     messages.value.nameMessage = "";
   }
 
-  if (!regexCheck("nickname", value.nickname)) {
+  if (!nicknameCheck) {
     messages.value.nicknameMessage = "한글과 영어와 숫자만 입력하세요.";
   } else {
     messages.value.nicknameMessage = "";
   }
 
-  if (value.password.length < 8 || value.password.length > 20) {
+  if (passwordCheck) {
     messages.value.passwordMessage = "8자 이상 20자 이하로 입력하세요.";
   } else {
     messages.value.passwordMessage = "";
   }
 
-  try {
-    const result = await axios.post("/api/node/register", value);
-    if (result.status == 201) {
-      alert(result.data.message);
-      email.value = "";
-      name.value = "";
-      nickname.value = "";
-      password.value = "";
-      props.accountToggle();
-    } else if (result.status == 202) {
-      alert(result.data.message);
-      email.value = "";
+  if (emailCheck && nameCheck && nicknameCheck && !passwordCheck) {
+    return true;
+  }
+};
+
+// 회원가입
+const submit = async (e: any) => {
+  e.preventDefault();
+
+  if (valueCheck()) {
+    const value = {
+      email: email.value,
+      name: name.value,
+      nickname: nickname.value,
+      password: password.value,
+    };
+
+    try {
+      const result = await axios.post("/api/node/register", value);
+      if (result.status == 201) {
+        alert(result.data.message);
+        email.value = "";
+        name.value = "";
+        nickname.value = "";
+        password.value = "";
+        props.accountToggle();
+      } else if (result.status == 202) {
+        alert(result.data.message);
+        email.value = "";
+      }
+    } catch (e) {
+      console.log(e);
     }
-  } catch (e) {
-    console.log(e);
   }
 };
 </script>
