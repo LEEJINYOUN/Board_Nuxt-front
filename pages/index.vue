@@ -77,7 +77,7 @@ onMounted(() => {
                   <td
                     class="w-1/6 text-center py-4 whitespace-nowrap text-sm font-medium text-gray-900"
                   >
-                    {{ key + 1 }}
+                    {{ postsData && postsData?.length - key }}
                   </td>
                   <td
                     class="w-3/6 max-w-[250px] text-left text-sm text-gray-900 font-light px-6 py-4 text-ellipsis whitespace-nowrap overflow-hidden"
