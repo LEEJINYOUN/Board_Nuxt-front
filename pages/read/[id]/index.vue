@@ -14,6 +14,9 @@ definePageMeta({
   layout: "navbar",
 });
 
+// storage
+const userStore = useUserStore();
+
 // 변수
 const router = useRouter();
 const route = useRoute();
@@ -23,15 +26,6 @@ const commentsData = ref<any[] | undefined>();
 const comment = ref("");
 const isCommentEdit = ref(false);
 const editCommentId = ref<number | undefined>();
-
-// input 변경
-const onChange = (e: any) => {
-  const { name, value } = e.target;
-
-  if (name == "comment") {
-    comment.value = value;
-  }
-};
 
 // 특정 게시물 불러오기
 const getApiData = async () => {
@@ -50,7 +44,7 @@ const postDelete = async (id: number) => {
   try {
     const result = await axios.delete(`/api/node/posts/${id}`);
     if (result.status == 200) {
-      router.push(`/`);
+      window.location.replace("/");
     }
   } catch (e) {
     console.log(e);
@@ -75,7 +69,7 @@ const submit = async (e: any) => {
 
   const value = {
     postId: paramsId,
-    writerNickname: "유저3",
+    writerNickname: userStore.getUserData.nickname,
     writerImage:
       "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png",
     comment: comment.value,
@@ -196,9 +190,24 @@ onMounted(() => {
         />
       </div>
     </div>
-    <div class="flex justify-end items-center my-5">
-      <LazyButtonBlueButton type="button" title="수정" @click="gotoEdit" />
+    <div
+      v-if="postsData !== undefined"
+      class="flex justify-end items-center my-5"
+    >
+      <LazyButtonBlueButton
+        v-if="
+          userStore.getUserData !== undefined &&
+          userStore.getUserData.name === postsData.writer
+        "
+        type="button"
+        title="수정"
+        @click="gotoEdit"
+      />
       <LazyButtonRedButton
+        v-if="
+          userStore.getUserData !== undefined &&
+          userStore.getUserData.name === postsData.writer
+        "
         type="button"
         title="삭제"
         @click="() => postDelete(postsData.id)"
@@ -211,6 +220,7 @@ onMounted(() => {
           id="comment"
           :value="comment"
           placeholder="댓글을 작성하세요."
+          @update:textareaValue="($event) => (comment = $event.target.value)"
         />
         <div class="flex justify-end items-center my-5">
           <LazyButtonDarkButton type="submit" title="댓글 작성" />
@@ -221,7 +231,11 @@ onMounted(() => {
         method="post"
         @submit="commentEditSubmit"
       >
-        <LazyFormTextareaItem id="comment" :value="comment" />
+        <LazyFormTextareaItem
+          id="comment"
+          :value="comment"
+          @update:textareaValue="($event) => (comment = $event.target.value)"
+        />
         <div class="flex justify-end items-center my-5">
           <LazyButtonDarkButton type="submit" title="댓글 수정" />
         </div>
@@ -249,11 +263,19 @@ onMounted(() => {
             </div>
             <div class="flex justify-end items-center">
               <LazyButtonBlueButton
+                v-if="
+                  userStore.getUserData !== undefined &&
+                  userStore.getUserData.nickname === item.writer_nickname
+                "
                 type="button"
                 title="수정"
                 @click="() => commentEdit(item.id)"
               />
               <LazyButtonRedButton
+                v-if="
+                  userStore.getUserData !== undefined &&
+                  userStore.getUserData.nickname === item.writer_nickname
+                "
                 type="button"
                 title="삭제"
                 @click="() => commentDelete(item.id)"

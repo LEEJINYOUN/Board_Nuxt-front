@@ -18,17 +18,6 @@ const paramsId = route.params.id;
 const title = ref("");
 const content = ref("");
 
-// input 변경
-const onChange = (e: any) => {
-  const { name, value } = e.target;
-
-  if (name == "title") {
-    title.value = value;
-  } else if (name == "content") {
-    content.value = value;
-  }
-};
-
 // 특정 게시물 불러오기
 const getApiData = async () => {
   try {
@@ -76,6 +65,7 @@ onMounted(() => {
           id="title"
           :value="title"
           placeholder="제목"
+          @update:inputValue="($event) => (title = $event.target.value)"
         />
       </div>
       <div class="mb-5">
@@ -84,6 +74,7 @@ onMounted(() => {
           id="content"
           :value="content"
           placeholder="내용"
+          @update:textareaValue="($event) => (content = $event.target.value)"
         />
       </div>
       <LazyButtonBlueButton type="submit" title="수정하기" />

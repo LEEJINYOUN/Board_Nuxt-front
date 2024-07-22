@@ -6,6 +6,9 @@ definePageMeta({
   layout: "navbar",
 });
 
+// storage
+const userStore = useUserStore();
+
 // 변수
 const router = useRouter();
 const postsData = ref<any[] | undefined>();
@@ -36,7 +39,10 @@ onMounted(() => {
 </script>
 <template>
   <div class="w-11/12 lg:w-2/3 m-auto mt-5">
-    <div class="flex justify-end items-center w-full">
+    <div
+      v-if="userStore.getUserData !== undefined"
+      class="flex justify-end items-center w-full"
+    >
       <LazyButtonBlueButton type="button" title="글쓰기" @click="goToWrite" />
     </div>
     <div class="flex flex-col">
