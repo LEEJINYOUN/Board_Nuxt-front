@@ -56,13 +56,13 @@ const valueCheck = () => {
   }
 
   if (!nameCheck) {
-    messages.value.nameMessage = "한글과 영어만 입력하세요.";
+    messages.value.nameMessage = "한글 or 영어만 입력하세요.";
   } else {
     messages.value.nameMessage = "";
   }
 
   if (!nicknameCheck) {
-    messages.value.nicknameMessage = "한글과 영어와 숫자만 입력하세요.";
+    messages.value.nicknameMessage = "한글 or 영어or 숫자만 입력하세요.";
   } else {
     messages.value.nicknameMessage = "";
   }

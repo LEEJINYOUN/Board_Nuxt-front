@@ -39,7 +39,7 @@ export const useUserStore = defineStore("user", () => {
     const result = await axios.post("/api/node/logout");
     if (result.status == 200) {
       getUserData.value = undefined;
-      // window.open("/", "_self");
+      window.location.replace("/login");
     }
   };
 

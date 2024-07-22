@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import axios from "axios";
-import {
-  LazyContainerUser,
-  LazyButtonBlueButton,
-  LazyCommonPagination,
-} from "#components";
+import { LazyButtonBlueButton, LazyCommonPagination } from "#components";
 
 definePageMeta({
   layout: "navbar",
@@ -103,8 +99,4 @@ onMounted(() => {
       <LazyCommonPagination />
     </div>
   </div>
-
-  <!-- <div>
-    <LazyContainerUser />
-  </div> -->
 </template>

@@ -1,10 +1,18 @@
 <script setup lang="ts">
+// storage
+const userStore = useUserStore();
+
 // 변수
 const isMobileOpen = ref(false);
 
 // 모바일 토글
 const mobileToggle = () => {
   isMobileOpen.value = isMobileOpen.value == false;
+};
+
+// 로그아웃
+const logout = async () => {
+  await userStore.logout();
 };
 </script>
 <template>
@@ -47,11 +55,25 @@ const mobileToggle = () => {
             class="flex-col flex-grow pb-4 md:pb-0 md:flex md:justify-end md:flex-row"
           >
             <NuxtLink
+              v-if="userStore.getUserData === undefined"
               to="/login"
               class="px-4 flex justify-start py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
             >
               로그인
             </NuxtLink>
+            <div
+              v-if="userStore.getUserData !== undefined"
+              class="px-4 flex justify-start py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+            >
+              {{ userStore.getUserData.nickname }}님 환영합니다
+            </div>
+            <button
+              v-if="userStore.getUserData !== undefined"
+              class="px-4 flex justify-start py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+              @click="logout"
+            >
+              로그아웃
+            </button>
           </nav>
         </div>
       </div>
