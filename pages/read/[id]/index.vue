@@ -215,74 +215,88 @@ onMounted(() => {
       <LazyButtonBlueButton type="button" title="목록" @click="goToBack" />
     </div>
     <div class="w-full md:w-4/6 m-auto">
-      <form v-if="isCommentEdit == false" method="post" @submit="submit">
-        <LazyFormTextareaItem
-          id="comment"
-          :value="comment"
-          placeholder="댓글을 작성하세요."
-          @update:textareaValue="($event) => (comment = $event.target.value)"
-        />
-        <div class="flex justify-end items-center my-5">
-          <LazyButtonDarkButton type="submit" title="댓글 작성" />
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
+          댓글 ({{ commentsData?.length }})
+        </h2>
+      </div>
+      <form
+        v-if="isCommentEdit == false"
+        method="post"
+        @submit="submit"
+        class="mb-6"
+      >
+        <div class="py-2 mb-4">
+          <LazyFormTextareaItem
+            id="comment"
+            :value="comment"
+            placeholder="댓글을 작성하세요."
+            @update:textareaValue="($event) => (comment = $event.target.value)"
+          />
         </div>
+        <LazyButtonDarkButton type="submit" title="댓글 작성" />
       </form>
       <form
         v-if="isCommentEdit == true"
         method="post"
         @submit="commentEditSubmit"
+        class="mb-6"
       >
-        <LazyFormTextareaItem
-          id="comment"
-          :value="comment"
-          @update:textareaValue="($event) => (comment = $event.target.value)"
-        />
-        <div class="flex justify-end items-center my-5">
-          <LazyButtonDarkButton type="submit" title="댓글 수정" />
+        <div class="py-2 mb-4">
+          <LazyFormTextareaItem
+            id="comment"
+            :value="comment"
+            @update:textareaValue="($event) => (comment = $event.target.value)"
+          />
         </div>
+        <LazyButtonDarkButton type="submit" title="댓글 수정" />
       </form>
       <div class="flex flex-col gap-7">
-        <div
+        <article
           v-for="(item, key) in commentsData"
           :key="key"
-          class="flex gap-5 px-3 py-4 bg-gray-200 rounded-lg"
+          class="p-6 text-base bg-white rounded-lg dark:bg-gray-900"
         >
-          <div class="flex justify-center items-center px-2">
-            <img
-              :src="item.writer_image"
-              :alt="item.writer_nickname"
-              class="w-12 h-12 rounded-full"
+          <footer class="flex justify-between items-center mb-2">
+            <div class="flex items-center">
+              <p
+                class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold"
+              >
+                <img
+                  class="mr-2 w-6 h-6 rounded-full"
+                  :src="item.writer_image"
+                  :alt="item.writer_nickname"
+                />{{ item.writer_nickname }}
+              </p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                <time>{{ item.created_at }}</time>
+              </p>
+            </div>
+          </footer>
+          <p class="text-gray-500 dark:text-gray-400 p-2 text">
+            {{ item.comment }}
+          </p>
+          <div class="flex items-center mt-4 space-x-4">
+            <LazyButtonBlueButton
+              v-if="
+                userStore.getUserData !== undefined &&
+                userStore.getUserData.nickname === item.writer_nickname
+              "
+              type="button"
+              title="수정"
+              @click="() => commentEdit(item.id)"
+            />
+            <LazyButtonRedButton
+              v-if="
+                userStore.getUserData !== undefined &&
+                userStore.getUserData.nickname === item.writer_nickname
+              "
+              type="button"
+              title="삭제"
+              @click="() => commentDelete(item.id)"
             />
           </div>
-          <div class="w-full flex flex-col">
-            <div class="flex justify-between p-2">
-              <div class="font-semibold">{{ item.writer_nickname }}</div>
-              <div class="text-gray-600 text-sm">{{ item.created_at }}</div>
-            </div>
-            <div class="p-2 w-full h-auto">
-              <div>{{ item.comment }}</div>
-            </div>
-            <div class="flex justify-end items-center">
-              <LazyButtonBlueButton
-                v-if="
-                  userStore.getUserData !== undefined &&
-                  userStore.getUserData.nickname === item.writer_nickname
-                "
-                type="button"
-                title="수정"
-                @click="() => commentEdit(item.id)"
-              />
-              <LazyButtonRedButton
-                v-if="
-                  userStore.getUserData !== undefined &&
-                  userStore.getUserData.nickname === item.writer_nickname
-                "
-                type="button"
-                title="삭제"
-                @click="() => commentDelete(item.id)"
-              />
-            </div>
-          </div>
-        </div>
+        </article>
       </div>
       <div class="flex justify-center items-center my-7">
         <LazyCommonPagination />
