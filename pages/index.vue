@@ -12,12 +12,18 @@ const userStore = useUserStore();
 // 변수
 const router = useRouter();
 const postsData = ref<any[] | undefined>();
+const page = ref(1);
+const perPage = ref(5);
+const pageNumber = ref<any | undefined>();
 
 // 게시글 리스트 불러오기
 const getApiData = async () => {
   try {
-    const result = await axios.get(`/api/node/posts`);
+    const result = await axios.get(
+      `/api/node/posts?page=${page.value}&perPage=${perPage.value}`
+    );
     postsData.value = result.data.results;
+    pageNumber.value = result.data.results[0];
   } catch (e) {
     console.log(e);
   }
@@ -31,6 +37,11 @@ const goToWrite = () => {
 // 글읽기 페이지 이동
 const goToRead = (id: number) => {
   router.push(`/read/${id}`);
+};
+
+const pageChange = (number: number) => {
+  page.value = number;
+  getApiData();
 };
 
 onMounted(() => {
@@ -77,7 +88,7 @@ onMounted(() => {
                   <td
                     class="w-1/6 text-center py-4 whitespace-nowrap text-sm font-medium text-gray-900"
                   >
-                    {{ postsData && postsData?.length - key }}
+                    {{ item.id }}
                   </td>
                   <td
                     class="w-3/6 max-w-[250px] text-left text-sm text-gray-900 font-light px-6 py-4 text-ellipsis whitespace-nowrap overflow-hidden"
@@ -101,8 +112,18 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div class="flex justify-center items-center">
-      <LazyCommonPagination />
+    <div
+      v-if="postsData !== undefined"
+      class="flex justify-center items-center gap-5"
+    >
+      <button
+        v-for="(number, key) in (pageNumber.id % 5) + 1"
+        :key="key"
+        :class="page == number ? 'font-semibold' : ''"
+        @click="pageChange(number)"
+      >
+        {{ key + 1 }}
+      </button>
     </div>
   </div>
 </template>
