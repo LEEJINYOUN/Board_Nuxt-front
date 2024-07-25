@@ -9,6 +9,7 @@ import {
 
 definePageMeta({
   layout: "navbar",
+  middleware: ["auth-user"],
 });
 
 // 변수

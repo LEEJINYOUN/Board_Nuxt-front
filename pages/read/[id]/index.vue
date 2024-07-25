@@ -246,7 +246,7 @@ onMounted(() => {
         </h2>
       </div>
       <form
-        v-if="isCommentEdit == false"
+        v-if="userStore.getUserData !== undefined && isCommentEdit == false"
         method="post"
         @submit="submit"
         class="mb-6"
@@ -262,7 +262,7 @@ onMounted(() => {
         <LazyButtonDarkButton type="submit" title="댓글 작성" />
       </form>
       <form
-        v-if="isCommentEdit == true"
+        v-if="userStore.getUserData !== undefined && isCommentEdit == true"
         method="post"
         @submit="commentEditSubmit"
         class="mb-6"
