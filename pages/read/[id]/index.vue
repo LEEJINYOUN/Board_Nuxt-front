@@ -26,6 +26,9 @@ const commentsData = ref<any[] | undefined>();
 const comment = ref("");
 const isCommentEdit = ref(false);
 const editCommentId = ref<number | undefined>();
+const page = ref(1);
+const perPage = ref(5);
+const pageNumber = ref<number | undefined>();
 
 // 특정 게시물 불러오기
 const getApiData = async () => {
@@ -54,10 +57,12 @@ const postDelete = async (id: number) => {
 // 댓글 리스트 불러오기
 const getCommentData = async () => {
   try {
-    const result = await axios.get(`/api/node/comments/${paramsId}`);
-    if (result.status == 200) {
-      commentsData.value = result.data.results;
-    }
+    const result = await axios.get(
+      `/api/node/comments/${paramsId}?page=${page.value}&perPage=${perPage.value}`
+    );
+
+    commentsData.value = result.data.results;
+    pageNumber.value = Number(result.data.totalCount);
   } catch (e) {
     console.log(e);
   }
@@ -68,7 +73,7 @@ const submit = async (e: any) => {
   e.preventDefault();
 
   const value = {
-    postId: paramsId,
+    postId: Number(paramsId),
     writerNickname: userStore.getUserData.nickname,
     writerImage:
       "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png",
@@ -150,6 +155,26 @@ const goToBack = () => {
   router.push("/");
 };
 
+// 댓글 페이지 전환
+const pageChange = (number: number) => {
+  page.value = number;
+  getCommentData();
+};
+
+// 날짜 포맷
+const dateFormat = (createdAt: Date) => {
+  let date = new Date(createdAt);
+  let dateFormat =
+    date.getFullYear() +
+    "-" +
+    (date.getMonth() + 1 < 9
+      ? "0" + (date.getMonth() + 1)
+      : date.getMonth() + 1) +
+    "-" +
+    (date.getDate() < 9 ? "0" + date.getDate() : date.getDate());
+  return dateFormat;
+};
+
 onMounted(() => {
   getApiData();
   getCommentData();
@@ -217,7 +242,7 @@ onMounted(() => {
     <div class="w-full md:w-4/6 m-auto">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
-          댓글 ({{ commentsData?.length }})
+          댓글 ({{ pageNumber }})
         </h2>
       </div>
       <form
@@ -269,7 +294,7 @@ onMounted(() => {
                 />{{ item.writer_nickname }}
               </p>
               <p class="text-sm text-gray-600 dark:text-gray-400">
-                <time>{{ item.created_at }}</time>
+                <time>{{ dateFormat(item.created_at) }}</time>
               </p>
             </div>
           </footer>
@@ -298,8 +323,19 @@ onMounted(() => {
           </div>
         </article>
       </div>
-      <div class="flex justify-center items-center my-7">
-        <LazyCommonPagination />
+      <div
+        v-if="postsData !== undefined && pageNumber !== undefined"
+        class="flex justify-center items-center gap-5 mt-5 mb-10"
+      >
+        <button
+          v-for="(number, key) in Math.ceil(pageNumber / perPage)"
+          :key="key"
+          class="rounded-full flex items-center justify-center px-3 h-8 text-blue-400 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+          :class="page == number ? 'font-semibold text-blue-600' : ''"
+          @click="pageChange(number)"
+        >
+          {{ key + 1 }}
+        </button>
       </div>
     </div>
   </div>

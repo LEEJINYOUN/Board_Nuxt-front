@@ -14,7 +14,7 @@ const router = useRouter();
 const postsData = ref<any[] | undefined>();
 const page = ref(1);
 const perPage = ref(5);
-const pageNumber = ref<any | undefined>();
+const pageNumber = ref<number | undefined>();
 
 // 게시글 리스트 불러오기
 const getApiData = async () => {
@@ -23,7 +23,7 @@ const getApiData = async () => {
       `/api/node/posts?page=${page.value}&perPage=${perPage.value}`
     );
     postsData.value = result.data.results;
-    pageNumber.value = result.data.results[0];
+    pageNumber.value = Number(result.data.totalCount);
   } catch (e) {
     console.log(e);
   }
@@ -39,9 +39,24 @@ const goToRead = (id: number) => {
   router.push(`/read/${id}`);
 };
 
+// 게시글 페이지 전환
 const pageChange = (number: number) => {
   page.value = number;
   getApiData();
+};
+
+// 날짜 포맷
+const dateFormat = (createdAt: Date) => {
+  let date = new Date(createdAt);
+  let dateFormat =
+    date.getFullYear() +
+    "-" +
+    (date.getMonth() + 1 < 9
+      ? "0" + (date.getMonth() + 1)
+      : date.getMonth() + 1) +
+    "-" +
+    (date.getDate() < 9 ? "0" + date.getDate() : date.getDate());
+  return dateFormat;
 };
 
 onMounted(() => {
@@ -103,7 +118,7 @@ onMounted(() => {
                   <td
                     class="w-1/6 text-center text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                   >
-                    {{ item.created_at }}
+                    {{ dateFormat(item.created_at) }}
                   </td>
                 </tr>
               </tbody>
@@ -113,13 +128,14 @@ onMounted(() => {
       </div>
     </div>
     <div
-      v-if="postsData !== undefined"
+      v-if="postsData !== undefined && pageNumber !== undefined"
       class="flex justify-center items-center gap-5"
     >
       <button
-        v-for="(number, key) in (pageNumber.id % 5) + 1"
+        v-for="(number, key) in Math.ceil(pageNumber / perPage)"
         :key="key"
-        :class="page == number ? 'font-semibold' : ''"
+        class="rounded-full flex items-center justify-center px-3 h-8 text-blue-400 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+        :class="page == number ? 'font-semibold text-blue-600' : ''"
         @click="pageChange(number)"
       >
         {{ key + 1 }}
