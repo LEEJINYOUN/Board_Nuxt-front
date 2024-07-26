@@ -4,7 +4,9 @@ import {
   LazyFormInputItem,
   LazyButtonBlueButton,
   LazyTextAuthMessage,
+  LazyTextAuthAccountChange,
 } from "#components";
+import { RegexCheck } from "@/composables/InputRole";
 
 defineProps<{
   accountToggle: () => void;
@@ -21,24 +23,9 @@ const messages = ref({
   passwordMessage: "",
 });
 
-// 정규식 규칙
-const regexCheck = (type: string, input: string) => {
-  let reg: any;
-
-  if (type == "email") {
-    reg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
-  }
-
-  if (!reg.test(input)) {
-    return false;
-  } else {
-    return true;
-  }
-};
-
 // 정규식 판단
 const valueCheck = () => {
-  let emailCheck = regexCheck("email", email.value);
+  let emailCheck = RegexCheck("email", email.value);
   let passwordCheck = password.value.length < 8 || password.value.length > 20;
 
   if (!emailCheck) {
@@ -100,14 +87,11 @@ const login = async (e: any) => {
         :message="messages.passwordMessage"
       />
     </div>
-    <div class="my-5 flex items-center text-center gap-5 text-sm">
-      <span>회원이 아닌가요?</span>
-      <span
-        class="text-red-500 hover:text-red-700 cursor-pointer"
-        @click="accountToggle"
-        >회원가입</span
-      >
-    </div>
+    <LazyTextAuthAccountChange
+      :accountToggle="accountToggle"
+      title="회원이 아닌가요?"
+      button="회원가입"
+    />
     <LazyButtonBlueButton class="w-full" type="submit" title="로그인" />
   </form>
 </template>

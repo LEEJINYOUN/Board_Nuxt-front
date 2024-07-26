@@ -2,6 +2,7 @@
 import axios from "axios";
 import { LazyButtonBlueButton } from "#components";
 import { API_FRONT_URL } from "~/constants/api/ApiUrl";
+import { ChangeDate } from "@/composables/DateFormat";
 
 definePageMeta({
   layout: "navbar",
@@ -44,20 +45,6 @@ const goToRead = (id: number) => {
 const pageChange = (number: number) => {
   page.value = number;
   getApiData();
-};
-
-// 날짜 포맷
-const dateFormat = (createdAt: Date) => {
-  let date = new Date(createdAt);
-  let dateFormat =
-    date.getFullYear() +
-    "-" +
-    (date.getMonth() + 1 < 9
-      ? "0" + (date.getMonth() + 1)
-      : date.getMonth() + 1) +
-    "-" +
-    (date.getDate() < 9 ? "0" + date.getDate() : date.getDate());
-  return dateFormat;
 };
 
 onMounted(() => {
@@ -119,7 +106,7 @@ onMounted(() => {
                   <td
                     class="w-1/6 text-center text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
                   >
-                    {{ dateFormat(item.created_at) }}
+                    {{ ChangeDate(item.created_at) }}
                   </td>
                 </tr>
               </tbody>

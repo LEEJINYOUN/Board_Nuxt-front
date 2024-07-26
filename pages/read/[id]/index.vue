@@ -9,6 +9,7 @@ import {
   LazyButtonDarkButton,
 } from "#components";
 import { API_FRONT_URL } from "~/constants/api/ApiUrl";
+import { ChangeDate } from "@/composables/DateFormat";
 
 definePageMeta({
   layout: "navbar",
@@ -161,20 +162,6 @@ const pageChange = (number: number) => {
   getCommentData();
 };
 
-// 날짜 포맷
-const dateFormat = (createdAt: Date) => {
-  let date = new Date(createdAt);
-  let dateFormat =
-    date.getFullYear() +
-    "-" +
-    (date.getMonth() + 1 < 9
-      ? "0" + (date.getMonth() + 1)
-      : date.getMonth() + 1) +
-    "-" +
-    (date.getDate() < 9 ? "0" + date.getDate() : date.getDate());
-  return dateFormat;
-};
-
 onMounted(() => {
   getApiData();
   getCommentData();
@@ -294,7 +281,7 @@ onMounted(() => {
                 />{{ item.writer_nickname }}
               </p>
               <p class="text-sm text-gray-600 dark:text-gray-400">
-                <time>{{ dateFormat(item.created_at) }}</time>
+                <time>{{ ChangeDate(item.created_at) }}</time>
               </p>
             </div>
           </footer>
