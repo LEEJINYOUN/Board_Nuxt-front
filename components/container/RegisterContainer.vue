@@ -6,6 +6,7 @@ import {
   LazyButtonBlueButton,
   LazyTextAuthMessage,
 } from "#components";
+import { API_FRONT_URL } from "~/constants/api/ApiUrl";
 
 const props = defineProps<{
   accountToggle: () => void;
@@ -91,7 +92,7 @@ const submit = async (e: any) => {
     };
 
     try {
-      const result = await axios.post("/api/node/register", value);
+      const result = await axios.post(`${API_FRONT_URL}/register`, value);
       if (result.status == 201) {
         alert(result.data.message);
         email.value = "";

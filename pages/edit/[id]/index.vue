@@ -6,6 +6,7 @@ import {
   LazyFormTextareaItem,
   LazyButtonBlueButton,
 } from "#components";
+import { API_FRONT_URL } from "~/constants/api/ApiUrl";
 
 definePageMeta({
   layout: "navbar",
@@ -22,7 +23,7 @@ const content = ref("");
 // 특정 게시물 불러오기
 const getApiData = async () => {
   try {
-    const result = await axios.get(`/api/node/posts/${paramsId}/edit`);
+    const result = await axios.get(`${API_FRONT_URL}/posts/${paramsId}/edit`);
 
     if (result.status == 200) {
       title.value = result.data.results[0].title;
@@ -43,7 +44,10 @@ const shoesUpdate = async (e: any) => {
   };
 
   try {
-    const result = await axios.patch(`/api/node/posts/${paramsId}`, value);
+    const result = await axios.patch(
+      `${API_FRONT_URL}/posts/${paramsId}`,
+      value
+    );
     if (result.status == 200) {
       router.push(`/read/${paramsId}`);
     }

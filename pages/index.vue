@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import axios from "axios";
-import { LazyButtonBlueButton, LazyCommonPagination } from "#components";
+import { LazyButtonBlueButton } from "#components";
+import { API_FRONT_URL } from "~/constants/api/ApiUrl";
 
 definePageMeta({
   layout: "navbar",
@@ -20,7 +21,7 @@ const pageNumber = ref<number | undefined>();
 const getApiData = async () => {
   try {
     const result = await axios.get(
-      `/api/node/posts?page=${page.value}&perPage=${perPage.value}`
+      `${API_FRONT_URL}/posts?page=${page.value}&perPage=${perPage.value}`
     );
     postsData.value = result.data.results;
     pageNumber.value = Number(result.data.totalCount);

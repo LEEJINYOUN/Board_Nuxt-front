@@ -1,5 +1,6 @@
 import axios from "axios";
 import { defineStore } from "pinia";
+import { API_FRONT_URL } from "~/constants/api/ApiUrl";
 
 export const useUserStore = defineStore("user", () => {
   // 변수
@@ -8,7 +9,7 @@ export const useUserStore = defineStore("user", () => {
   // 로그인
   const login = async (value: any) => {
     try {
-      const result = await axios.post("/api/node/login", value);
+      const result = await axios.post(`${API_FRONT_URL}/login`, value);
       if (result.status == 200) {
         alert(result.data.message);
         window.location.replace("/");
@@ -25,7 +26,7 @@ export const useUserStore = defineStore("user", () => {
   // 로그인 성공 시 유지
   const fetchLogin = async () => {
     try {
-      const result = await axios.get("/api/node/login/success");
+      const result = await axios.get(`${API_FRONT_URL}/login/success`);
       if (result.status == 200) {
         getUserData.value = result.data;
       }
@@ -36,7 +37,7 @@ export const useUserStore = defineStore("user", () => {
 
   // 로그아웃
   const logout = async () => {
-    const result = await axios.post("/api/node/logout");
+    const result = await axios.post(`${API_FRONT_URL}/logout`);
     if (result.status == 200) {
       getUserData.value = undefined;
       window.location.replace("/login");

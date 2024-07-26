@@ -6,6 +6,7 @@ import {
   LazyFormTextareaItem,
   LazyButtonBlueButton,
 } from "#components";
+import { API_FRONT_URL } from "~/constants/api/ApiUrl";
 
 definePageMeta({
   layout: "navbar",
@@ -30,7 +31,7 @@ const submit = async (e: any) => {
   };
 
   try {
-    const result = await axios.post("/api/node/posts", value);
+    const result = await axios.post(`${API_FRONT_URL}/posts`, value);
     if (result.status == 201) {
       window.location.replace("/");
     }
