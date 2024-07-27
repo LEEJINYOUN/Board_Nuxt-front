@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import axios from "axios";
 import {
   LazyTextInputLabel,
   LazyFormInputItem,
@@ -7,8 +6,8 @@ import {
   LazyTextAuthMessage,
   LazyTextAuthAccountChange,
 } from "#components";
-import { API_FRONT_URL } from "~/constants/api/ApiUrl";
 import { RegexCheck } from "@/composables/InputRole";
+import AuthApi from "~/composables/rest/auth/AuthApi";
 
 const props = defineProps<{
   accountToggle: () => void;
@@ -75,16 +74,16 @@ const submit = async (e: any) => {
     };
 
     try {
-      const result = await axios.post(`${API_FRONT_URL}/register`, value);
-      if (result.status == 201) {
-        alert(result.data.message);
+      const result = AuthApi.register(value);
+      if ((await result).status == 201) {
+        alert((await result).data.message);
         email.value = "";
         name.value = "";
         nickname.value = "";
         password.value = "";
         props.accountToggle();
-      } else if (result.status == 202) {
-        alert(result.data.message);
+      } else if ((await result).status == 202) {
+        alert((await result).data.message);
         email.value = "";
       }
     } catch (e) {

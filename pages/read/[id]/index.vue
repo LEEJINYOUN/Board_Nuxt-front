@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import axios from "axios";
 import {
   LazyTextInputLabel,
   LazyFormInputItem,
@@ -8,8 +7,9 @@ import {
   LazyButtonRedButton,
   LazyButtonDarkButton,
 } from "#components";
-import { API_FRONT_URL } from "~/constants/api/ApiUrl";
 import { ChangeDate } from "@/composables/DateFormat";
+import PostApi from "~/composables/rest/post/PostApi";
+import CommentApi from "~/composables/rest/comment/CommentApi";
 
 definePageMeta({
   layout: "navbar",
@@ -34,9 +34,9 @@ const pageNumber = ref<number | undefined>();
 // 특정 게시물 불러오기
 const getApiData = async () => {
   try {
-    const result = await axios.get(`${API_FRONT_URL}/posts/${paramsId}`);
-    if (result.status == 200) {
-      postsData.value = result.data.results[0];
+    const result = PostApi.show(paramsId);
+    if ((await result).status == 200) {
+      postsData.value = (await result).data.results[0];
     }
   } catch (e) {
     console.log(e);
@@ -46,8 +46,8 @@ const getApiData = async () => {
 // 게시물 삭제
 const postDelete = async (id: number) => {
   try {
-    const result = await axios.delete(`${API_FRONT_URL}/posts/${id}`);
-    if (result.status == 200) {
+    const result = PostApi.destroy(id);
+    if ((await result).status == 200) {
       window.location.replace("/");
     }
   } catch (e) {
@@ -58,12 +58,9 @@ const postDelete = async (id: number) => {
 // 댓글 리스트 불러오기
 const getCommentData = async () => {
   try {
-    const result = await axios.get(
-      `${API_FRONT_URL}/comments/${paramsId}?page=${page.value}&perPage=${perPage.value}`
-    );
-
-    commentsData.value = result.data.results;
-    pageNumber.value = Number(result.data.totalCount);
+    const result = CommentApi.index(paramsId, page.value, perPage.value);
+    commentsData.value = (await result).data.results;
+    pageNumber.value = Number((await result).data.totalCount);
   } catch (e) {
     console.log(e);
   }
@@ -82,8 +79,8 @@ const submit = async (e: any) => {
   };
 
   try {
-    const result = await axios.post(`${API_FRONT_URL}/comments`, value);
-    if (result.status == 201) {
+    const result = CommentApi.store(value);
+    if ((await result).status == 201) {
       comment.value = "";
       getCommentData();
     }
@@ -95,10 +92,10 @@ const submit = async (e: any) => {
 // 수정할 특정 댓글 불러오기
 const getEditCommentData = async (id: number) => {
   try {
-    const result = await axios.get(`${API_FRONT_URL}/comments/${id}/edit`);
-    if (result.status == 200) {
-      editCommentId.value = result.data.results[0].id;
-      comment.value = result.data.results[0].comment;
+    const result = CommentApi.edit(id);
+    if ((await result).status == 200) {
+      editCommentId.value = (await result).data.results[0].id;
+      comment.value = (await result).data.results[0].comment;
     }
   } catch (e) {
     console.log(e);
@@ -120,11 +117,8 @@ const commentEditSubmit = async (e: any) => {
   };
 
   try {
-    const result = await axios.patch(
-      `${API_FRONT_URL}/comments/${editCommentId.value}`,
-      value
-    );
-    if (result.status == 200) {
+    const result = CommentApi.update(editCommentId.value, value);
+    if ((await result).status == 200) {
       comment.value = "";
       isCommentEdit.value = false;
       getCommentData();
@@ -137,8 +131,8 @@ const commentEditSubmit = async (e: any) => {
 // 특정 댓글 삭제
 const commentDelete = async (id: number) => {
   try {
-    const result = await axios.delete(`${API_FRONT_URL}/comments/${id}`);
-    if (result.status == 200) {
+    const result = CommentApi.destroy(id);
+    if ((await result).status == 200) {
       getCommentData();
     }
   } catch (e) {

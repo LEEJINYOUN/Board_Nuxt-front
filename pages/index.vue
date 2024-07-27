@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import axios from "axios";
 import { LazyButtonBlueButton } from "#components";
-import { API_FRONT_URL } from "~/constants/api/ApiUrl";
 import { ChangeDate } from "@/composables/DateFormat";
+import PostApi from "~/composables/rest/post/PostApi";
 
 definePageMeta({
   layout: "navbar",
@@ -21,11 +20,9 @@ const pageNumber = ref<number | undefined>();
 // 게시글 리스트 불러오기
 const getApiData = async () => {
   try {
-    const result = await axios.get(
-      `${API_FRONT_URL}/posts?page=${page.value}&perPage=${perPage.value}`
-    );
-    postsData.value = result.data.results;
-    pageNumber.value = Number(result.data.totalCount);
+    const result = PostApi.index(page.value, perPage.value);
+    postsData.value = (await result).data.results;
+    pageNumber.value = Number((await result).data.totalCount);
   } catch (e) {
     console.log(e);
   }

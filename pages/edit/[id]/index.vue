@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import axios from "axios";
 import {
   LazyTextInputLabel,
   LazyFormInputItem,
   LazyFormTextareaItem,
   LazyButtonBlueButton,
 } from "#components";
-import { API_FRONT_URL } from "~/constants/api/ApiUrl";
+import PostApi from "~/composables/rest/post/PostApi";
 
 definePageMeta({
   layout: "navbar",
@@ -23,11 +22,11 @@ const content = ref("");
 // 특정 게시물 불러오기
 const getApiData = async () => {
   try {
-    const result = await axios.get(`${API_FRONT_URL}/posts/${paramsId}/edit`);
+    const result = PostApi.edit(paramsId);
 
-    if (result.status == 200) {
-      title.value = result.data.results[0].title;
-      content.value = result.data.results[0].content;
+    if ((await result).status == 200) {
+      title.value = (await result).data.results[0].title;
+      content.value = (await result).data.results[0].content;
     }
   } catch (e) {
     console.log(e);
@@ -44,11 +43,8 @@ const shoesUpdate = async (e: any) => {
   };
 
   try {
-    const result = await axios.patch(
-      `${API_FRONT_URL}/posts/${paramsId}`,
-      value
-    );
-    if (result.status == 200) {
+    const result = PostApi.update(paramsId, value);
+    if ((await result).status == 200) {
       router.push(`/read/${paramsId}`);
     }
   } catch (e) {

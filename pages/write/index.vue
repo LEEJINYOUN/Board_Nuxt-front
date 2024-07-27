@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import axios from "axios";
 import {
   LazyTextInputLabel,
   LazyFormInputItem,
   LazyFormTextareaItem,
   LazyButtonBlueButton,
 } from "#components";
-import { API_FRONT_URL } from "~/constants/api/ApiUrl";
+import PostApi from "~/composables/rest/post/PostApi";
 
 definePageMeta({
   layout: "navbar",
@@ -31,8 +30,8 @@ const submit = async (e: any) => {
   };
 
   try {
-    const result = await axios.post(`${API_FRONT_URL}/posts`, value);
-    if (result.status == 201) {
+    const result = PostApi.store(value);
+    if ((await result).status == 201) {
       window.location.replace("/");
     }
   } catch (e) {

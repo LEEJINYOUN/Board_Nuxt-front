@@ -1,6 +1,5 @@
-import axios from "axios";
 import { defineStore } from "pinia";
-import { API_FRONT_URL } from "~/constants/api/ApiUrl";
+import AuthApi from "~/composables/rest/auth/AuthApi";
 
 export const useUserStore = defineStore("user", () => {
   // 변수
@@ -9,13 +8,13 @@ export const useUserStore = defineStore("user", () => {
   // 로그인
   const login = async (value: any) => {
     try {
-      const result = await axios.post(`${API_FRONT_URL}/login`, value);
-      if (result.status == 200) {
-        alert(result.data.message);
+      const result = AuthApi.login(value);
+      if ((await result).status == 200) {
+        alert((await result).data.message);
         window.location.replace("/");
         await fetchLogin();
-      } else if (result.status == 202) {
-        alert(result.data.message);
+      } else if ((await result).status == 202) {
+        alert((await result).data.message);
       }
     } catch (e) {
       alert("회원이 아닙니다. 회원가입을 진행하세요.");
@@ -26,9 +25,9 @@ export const useUserStore = defineStore("user", () => {
   // 로그인 성공 시 유지
   const fetchLogin = async () => {
     try {
-      const result = await axios.get(`${API_FRONT_URL}/login/success`);
-      if (result.status == 200) {
-        getUserData.value = result.data;
+      const result = AuthApi.fetchLogin();
+      if ((await result).status == 200) {
+        getUserData.value = (await result).data;
       }
     } catch (e) {
       console.log(e);
@@ -37,8 +36,8 @@ export const useUserStore = defineStore("user", () => {
 
   // 로그아웃
   const logout = async () => {
-    const result = await axios.post(`${API_FRONT_URL}/logout`);
-    if (result.status == 200) {
+    const result = AuthApi.logout();
+    if ((await result).status == 200) {
       getUserData.value = undefined;
       window.location.replace("/login");
     }
