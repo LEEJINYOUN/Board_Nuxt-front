@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LazyButtonBlueButton } from "#components";
+import { LazyButtonBlueButton, LazyCommonPagination } from "#components";
 import { ChangeDate } from "@/composables/DateFormat";
 import PostApi from "~/composables/rest/post/PostApi";
 
@@ -116,15 +116,16 @@ onMounted(() => {
       v-if="postsData !== undefined && pageNumber !== undefined"
       class="flex justify-center items-center gap-5"
     >
-      <button
+      <LazyCommonPagination
         v-for="(number, key) in Math.ceil(pageNumber / perPage)"
         :key="key"
-        class="rounded-full flex items-center justify-center px-3 h-8 text-blue-400 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-        :class="page == number ? 'font-semibold text-blue-600' : ''"
-        @click="pageChange(number)"
-      >
-        {{ key + 1 }}
-      </button>
+        :pageNumber="pageNumber"
+        :perPage="perPage"
+        :page="page"
+        :pageChange="pageChange"
+        :number="number"
+        :contentPage="key"
+      />
     </div>
   </div>
 </template>
