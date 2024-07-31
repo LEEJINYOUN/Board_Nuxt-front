@@ -18,16 +18,42 @@ const userStore = useUserStore();
 // 변수
 const title = ref("");
 const content = ref("");
+const file = ref<File | null>(null);
+
+// 이미지 파일 변환
+const onChangeFile = (e: any) => {
+  const [_file] = (e.target as HTMLInputElement).files as FileList;
+  file.value = _file;
+};
 
 // 게시물 저장
 const submit = async (e: any) => {
   e.preventDefault();
 
-  const value = {
-    writer: userStore.getUserData.nickname,
-    title: title.value,
-    content: content.value,
-  };
+  let value;
+
+  if (file.value) {
+    const body = new FormData();
+    body.append("file", file.value, file.value.name);
+
+    const imageSave = await $fetch("/api/upload", {
+      method: "post",
+      body,
+    });
+    value = {
+      writer: userStore.getUserData.nickname,
+      title: title.value,
+      content: content.value,
+      fileName: imageSave,
+    };
+  } else {
+    value = {
+      writer: userStore.getUserData.nickname,
+      title: title.value,
+      content: content.value,
+      fileName: "",
+    };
+  }
 
   try {
     const result = PostApi.store(value);
@@ -60,6 +86,10 @@ const submit = async (e: any) => {
           placeholder="내용"
           @update:textareaValue="($event) => (content = $event.target.value)"
         />
+      </div>
+      <div class="mb-5">
+        <input type="file" @change="onChangeFile" />
+        <pre>{{ file?.name }}</pre>
       </div>
       <LazyButtonBlueButton type="submit" title="작성하기" />
     </form>
