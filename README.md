@@ -1,75 +1,50 @@
-# Nuxt 3 Minimal Starter
+# 게시판
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+<h2> 📃 개요 </h2>
 
-## Setup
+- <h3>Node js, Mysql 학습하기 위해 api 제작</h3>
+  <br/><br/>
 
-Make sure to install the dependencies:
+<h2> 🛠 사용 기술 </h2>
 
-```bash
-# npm
-npm install
+- <h3>Nuxt js</h3>
+- <h3>Typescript</h3>
+- <h3>Tailwind css</h3>
+- <h3>Node js</h3>
+- <h3>Mysql</h3>
 
-# pnpm
-pnpm install
+  <br/><br/>
 
-# yarn
-yarn install
+<h2> ⚙️ 구현 기능 </h2>
 
-# bun
-bun install
-```
+- <h3>회원가입, 로그인, 로그아웃</h3>
+- <h3>게시글 CRUD</h3>
+- <h3>댓글 CRUD</h3>
+  <br/><br/>
 
-## Development Server
+<h2> 🗒 특이사항 </h2>
 
-Start the development server on `http://localhost:3000`:
+<h3>1. mysql 외부 접속 오류로 인해 배포 보류</h3>
 
-```bash
-# npm
-npm run dev
+<h3>2. 이미지 업로드, 프로필 수정 등 게시판에 필요한 기능 추가 예정</h3>
 
-# pnpm
-pnpm run dev
+<h2> 🎥 구현 화면 </h2>
 
-# yarn
-yarn dev
+## 회원가입과 로그인
 
-# bun
-bun run dev
-```
+![캡처](/public/imgs/회원가입,%20로그인.gif)
 
-## Production
+---
 
-Build the application for production:
+## 게시글 CRUD
 
-```bash
-# npm
-npm run build
+![캡처](/public/imgs/글%20쓰기,%20읽기.gif)
+![캡처](/public/imgs/글%20수정,%20삭제.gif)
 
-# pnpm
-pnpm run build
+---
 
-# yarn
-yarn build
+## 댓글 CRUD
 
-# bun
-bun run build
-```
+![캡처](/public/imgs/댓글%20쓰기,%20수정,%20삭제.gif)
 
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+---
