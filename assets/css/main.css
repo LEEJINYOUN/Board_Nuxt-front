@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  background-color: rgba(200, 200, 200, 0.25);
+}
+
+.text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-break: break-word;
+
+  display: -webkit-box;
+  -webkit-line-clamp: auto;
+  -webkit-box-orient: vertical;
+}

@@ -10,12 +10,15 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  modules: ["@nuxt/ui"],
+  modules: ["@nuxt/ui", "@pinia/nuxt"],
 
   // cors 오류 -> 서버 주소
   routeRules: {
     "/api/node/**": {
       proxy: { to: `${process.env.NUXT_PUBLIC_NODE_API_URL}/**` },
     },
+  },
+  pinia: {
+    storesDirs: ["./stores/**"],
   },
 });
