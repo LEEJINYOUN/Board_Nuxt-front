@@ -24,6 +24,7 @@ const router = useRouter();
 const route = useRoute();
 const paramsId = route.params.id;
 const postsData = ref<any | undefined>();
+const imageData = ref<any | undefined>();
 const commentsData = ref<any[] | undefined>();
 const comment = ref("");
 const isCommentEdit = ref(false);
@@ -36,8 +37,10 @@ const pageNumber = ref<number | undefined>();
 const getApiData = async () => {
   try {
     const result = PostApi.show(paramsId);
+
     if ((await result).status == 200) {
       postsData.value = (await result).data.results[0];
+      imageData.value = (await result).data.image[0];
     }
   } catch (e) {
     console.log(e);
@@ -188,12 +191,22 @@ onMounted(() => {
         </div>
       </div>
       <div class="mb-6">
-        <LazyTextInputLabel is-for="content" title="내용" />
-        <LazyFormTextareaItem
-          id="content"
-          :value="postsData.content"
-          :isReadonly="true"
-          :isDisabled="true"
+        <div>
+          <LazyTextInputLabel is-for="content" title="내용" />
+          <LazyFormTextareaItem
+            id="content"
+            :value="postsData.content"
+            :isReadonly="true"
+            :isDisabled="true"
+          />
+        </div>
+      </div>
+      <div v-if="imageData" class="mb-6">
+        <LazyTextInputLabel is-for="image" title="이미지" />
+        <img
+          class="flex m-auto w-full h-auto rounded-lg"
+          :src="`/_nuxt/public/images/${imageData.file_name}`"
+          alt=""
         />
       </div>
     </div>
